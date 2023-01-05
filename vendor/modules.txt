@@ -23,18 +23,6 @@ github.com/PuerkitoBio/goquery
 # github.com/andybalholm/cascadia v1.3.1
 ## explicit; go 1.16
 github.com/andybalholm/cascadia
-# github.com/go-pg/pg/v10 v10.10.6
-## explicit; go 1.11
-github.com/go-pg/pg/v10
-github.com/go-pg/pg/v10/internal
-github.com/go-pg/pg/v10/internal/parser
-github.com/go-pg/pg/v10/internal/pool
-github.com/go-pg/pg/v10/orm
-github.com/go-pg/pg/v10/pgjson
-github.com/go-pg/pg/v10/types
-# github.com/go-pg/zerochecker v0.2.0
-## explicit; go 1.13
-github.com/go-pg/zerochecker
 # github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
 ## explicit
 github.com/golang/groupcache/lru
@@ -64,35 +52,12 @@ github.com/googleapis/gax-go/v2
 github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
 github.com/googleapis/gax-go/v2/internal
-# github.com/jinzhu/inflection v1.0.0
-## explicit
-github.com/jinzhu/inflection
 # github.com/kkdai/photomgr v0.6.0
 ## explicit; go 1.15
 github.com/kkdai/photomgr
 # github.com/line/line-bot-sdk-go/v7 v7.16.0
 ## explicit; go 1.11
 github.com/line/line-bot-sdk-go/v7/linebot
-# github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc
-## explicit
-github.com/tmthrgd/go-hex
-# github.com/vmihailenco/bufpool v0.1.11
-## explicit; go 1.13
-github.com/vmihailenco/bufpool
-# github.com/vmihailenco/msgpack/v5 v5.3.4
-## explicit; go 1.11
-github.com/vmihailenco/msgpack/v5
-github.com/vmihailenco/msgpack/v5/msgpcode
-# github.com/vmihailenco/tagparser v0.1.2
-## explicit; go 1.13
-github.com/vmihailenco/tagparser
-github.com/vmihailenco/tagparser/internal
-github.com/vmihailenco/tagparser/internal/parser
-# github.com/vmihailenco/tagparser/v2 v2.0.0
-## explicit; go 1.15
-github.com/vmihailenco/tagparser/v2
-github.com/vmihailenco/tagparser/v2/internal
-github.com/vmihailenco/tagparser/v2/internal/parser
 # go.opencensus.io v0.24.0
 ## explicit; go 1.13
 go.opencensus.io
@@ -112,9 +77,6 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
-# golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-## explicit; go 1.17
-golang.org/x/crypto/pbkdf2
 # golang.org/x/net v0.0.0-20221014081412-f15817d10f9b
 ## explicit; go 1.17
 golang.org/x/net/context
@@ -141,7 +103,6 @@ golang.org/x/oauth2/jwt
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10
 ## explicit; go 1.17
-golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # golang.org/x/text v0.4.0
@@ -297,9 +258,6 @@ google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/structpb
 google.golang.org/protobuf/types/known/timestamppb
 google.golang.org/protobuf/types/known/wrapperspb
-# mellium.im/sasl v0.2.1
-## explicit
-mellium.im/sasl
 # mvdan.cc/xurls/v2 v2.3.0
 ## explicit; go 1.15
 mvdan.cc/xurls/v2

@@ -121,46 +121,46 @@ func GetMostLike(total int, limit int) (results []models.ArticleDocument, err er
 }
 
 func (u *UserFavorite) Add(meta *models.Model) {
-	_, err := meta.Db.Model(u).Insert()
-	if err != nil {
-		meta.Log.Println(err)
-	}
+	// _, err := meta.Db.Model(u).Insert()
+	// if err != nil {
+	// 	meta.Log.Println(err)
+	// }
 }
 
 func (u *UserFavorite) Get(meta *models.Model) (result *UserFavorite, err error) {
 	log.Println("***Get Fav uUID=", u.UserId)
 	userFav := UserFavorite{}
-	err = meta.Db.Model(&userFav).
-		Where("user_id = ?", u.UserId).
-		Select()
-	if err != nil {
-		meta.Log.Println(err)
-		return nil, err
-	}
-	meta.Log.Println("UserFavorite DB result= ", userFav)
+	// err = meta.Db.Model(&userFav).
+	// 	Where("user_id = ?", u.UserId).
+	// 	Select()
+	// if err != nil {
+	// 	meta.Log.Println(err)
+	// 	return nil, err
+	// }
+	// meta.Log.Println("UserFavorite DB result= ", userFav)
 	return &userFav, nil
 }
 
 func (u *UserFavorite) Update(meta *models.Model) (err error) {
-	log.Println("***Update Fav User=", u)
+	// log.Println("***Update Fav User=", u)
 
-	_, err = meta.Db.Model(u).
-		Set("favorites = ?", u.Favorites).
-		Where("user_id = ?", u.UserId).
-		Update()
-	if err != nil {
-		meta.Log.Println(err)
-	}
+	// _, err = meta.Db.Model(u).
+	// 	Set("favorites = ?", u.Favorites).
+	// 	Where("user_id = ?", u.UserId).
+	// 	Update()
+	// if err != nil {
+	// 	meta.Log.Println(err)
+	// }
 	return nil
 }
 
 func (u *UserFavorite) ShowAll(meta *models.Model) (err error) {
 	log.Println("***ShowAll  User -->")
-	users := []UserFavorite{}
-	err = meta.Db.Model(&users).Select()
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println("***Show all users =", users)
+	// users := []UserFavorite{}
+	// err = meta.Db.Model(&users).Select()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// log.Println("***Show all users =", users)
 	return nil
 }
