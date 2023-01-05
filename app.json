@@ -1,8 +1,12 @@
 {
-  "name": "linebot-ptt-beauty",
+  "name": "ptt-beauty-linebot",
   "description": "Line Bot for ptt beauty",
-  "repository": "https://github.com/kkdai/linebot-ptt-beauty",
-  "keywords": ["Line", "go", "static"],
+  "repository": "https://github.com/kkdai/ptt-beauty-linebot",
+  "keywords": [
+    "Line",
+    "go",
+    "static"
+  ],
   "buildpacks": [
     {
       "url": "https://github.com/kr/heroku-buildpack-go.git"

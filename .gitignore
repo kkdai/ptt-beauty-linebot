@@ -20,4 +20,4 @@ local_run.sh
 build.sh
 
 .env
-linebot-ptt-beauty
+ptt-beauty-linebot

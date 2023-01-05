@@ -1,6 +1,6 @@
 services:
 - type: web
-  name: linebot-ptt-beauty
+  name: ptt-beauty-linebot
   env: go
   buildCommand: go build -o app
   startCommand: ./app
