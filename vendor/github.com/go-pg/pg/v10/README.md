@@ -1,28 +1,35 @@
 # PostgreSQL client and ORM for Golang
 
+## Maintenance mode
+
+go-pg is in a maintenance mode and only critical issues are addressed. New development happens in
+[**Bun**](https://bun.uptrace.dev/guide/pg-migration.html) repo which offers similar functionality
+but works with PostgreSQL, MySQL, MariaDB, and SQLite.
+
+## [Golang ORM](https://github.com/uptrace/bun)
+
+---
+
 [![Build Status](https://travis-ci.org/go-pg/pg.svg?branch=v10)](https://travis-ci.org/go-pg/pg)
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/go-pg/pg/v10)](https://pkg.go.dev/github.com/go-pg/pg/v10)
 [![Documentation](https://img.shields.io/badge/pg-documentation-informational)](https://pg.uptrace.dev/)
 [![Chat](https://discordapp.com/api/guilds/752070105847955518/widget.png)](https://discord.gg/rWtp5Aj)
 
-# Maintenance mode
-
-go-pg is in a maintenance mode and only critical issues are addressed. New development happens in
-[**Bun**](https://bun.uptrace.dev/guide/pg-migration.html) repo which offers similar functionality
-but works with PostgreSQL, MySQL, and SQLite.
-
----
-
-- Join [Discord](https://discord.gg/rWtp5Aj) to ask questions.
 - [Documentation](https://pg.uptrace.dev)
 - [Reference](https://pkg.go.dev/github.com/go-pg/pg/v10?tab=doc)
 - [Examples](https://pkg.go.dev/github.com/go-pg/pg/v10?tab=doc#pkg-examples)
 - Example projects:
-  - [treemux](https://github.com/uptrace/go-treemux-realworld-example-app)
+  - [monetr](https://github.com/monetr/monetr) - budgeting application focused on planning for
+    recurring expenses
+  - [bunrouter](https://github.com/go-bun/bun-realworld-app)
   - [gin](https://github.com/gogjango/gjango)
   - [go-kit](https://github.com/Tsovak/rest-api-demo)
   - [aah framework](https://github.com/kieusonlam/golamapi)
+
+## Tutorials
+
 - [GraphQL Tutorial on YouTube](https://www.youtube.com/playlist?list=PLzQWIQOqeUSNwXcneWYJHUREAIucJ5UZn).
+- [Modern API design with Golang, PostgreSQL and Docker](https://bognov.tech/modern-api-design-with-golang-postgresql-and-docker)
 
 ## Ecosystem
 
@@ -234,6 +241,8 @@ func createSchema(db *pg.DB) error {
 
 ## See also
 
-- [Fast and flexible HTTP router](https://github.com/vmihailenco/treemux)
+- [Golang PostgreSQL](https://bun.uptrace.dev/postgres/)
+- [Golang HTTP router](https://github.com/uptrace/bunrouter)
+- [Golang ClickHouse ORM](https://github.com/uptrace/go-clickhouse)
 - [Golang msgpack](https://github.com/vmihailenco/msgpack)
-- [Golang message task queue](https://github.com/vmihailenco/taskq)
+- [Distributed tracing tools](https://get.uptrace.dev/compare/distributed-tracing-tools.html)

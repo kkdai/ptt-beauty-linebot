@@ -77,16 +77,6 @@ func GetRandom(count int, keyword string) (results []models.ArticleDocument, err
 }
 
 func GetMostLike(total int, limit int) (results []models.ArticleDocument, err error) {
-	// if timestampOffset > 0 {
-	// 	now := time.Now()
-	// 	nowInSec := int(now.Unix())
-	// 	start := nowInSec - timestampOffset
-	// 	//{"timestamp": {"$gte":  1, "$lt": 9999999999}}
-	// 	query = bson.M{"timestamp": bson.M{"$gte": start, "$lt": nowInSec}, "article_title": bson.M{"$regex": bson.RegEx{"^\\[正妹\\].*", ""}}}
-	// } else {
-	// 	query = bson.M{"article_title": bson.M{"$regex": bson.RegEx{"^\\[正妹\\].*", ""}}}
-	// }
-
 	ptt := NewPTT()
 	pCount := ptt.ParsePttByNumber(total, 0)
 	if pCount == 0 {

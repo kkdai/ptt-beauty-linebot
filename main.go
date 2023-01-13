@@ -20,7 +20,7 @@ var no_db = true
 
 func main() {
 
-	logFile, err := initLogFile()
+	logFile, _ := initLogFile()
 	// dbHostPort := os.Getenv("MongoDBHostPort")
 	defer logFile.Close()
 
@@ -29,7 +29,7 @@ func main() {
 	meta.Db = db
 	defer db.Close()
 
-	err = createSchema(db)
+	err := createSchema(db)
 	if err != nil {
 		log.Println("DB err:", err)
 		no_db = false
