@@ -3,10 +3,12 @@ package models
 import (
 	"encoding/json"
 	"log"
+
+	"github.com/go-pg/pg/v10"
 )
 
 type Model struct {
-	// Db  *pg.DB
+	Db  *pg.DB
 	Log *log.Logger
 }
 
