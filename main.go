@@ -20,7 +20,13 @@ func main() {
 	defer logFile.Close()
 
 	url := os.Getenv("DATABASE_URL")
-	meta.Db = models.NewPGSql(url)
+	if url != "" {
+		meta.Db = models.NewPGSql(url)
+	} else {
+		//Use memory as DB
+		meta.Db = models.NewMemDB()
+	}
+
 	logger = utils.GetLogger(logFile)
 	meta.Log = logger
 

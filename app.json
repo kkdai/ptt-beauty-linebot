@@ -23,6 +23,10 @@
     "ChannelAccessToken": {
       "description": "Channel AccessToken",
       "required": true
+    },
+    "DATABASE_URL": {
+      "description": "PG SQL DB address, If empty using memory as DB.",
+      "required": false
     }
   }
 }
