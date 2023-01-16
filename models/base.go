@@ -10,5 +10,5 @@ type UserFavData interface {
 	Add(user UserFavorite)
 	Get(uid string) (result *UserFavorite, err error)
 	ShowAll() (result []UserFavorite, err error)
-	Update(user UserFavorite) (err error)
+	Update(user *UserFavorite) (err error)
 }
