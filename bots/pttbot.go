@@ -102,11 +102,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				if message.Text == "showall" {
 					log.Println("get show all user OP--->")
-					userFavorite := &controllers.UserFavorite{
-						UserId:    event.Source.UserID,
-						Favorites: []string{},
-					}
-					userFavorite.ShowAll(meta)
+					// userFavorite := &controllers.UserFavorite{
+					// 	UserId:    event.Source.UserID,
+					// 	Favorites: []string{},
+					// }
+					meta.Db.ShowAll()
+					// userFavorite.ShowAll(meta)
 					sendTextMessage(event, "Already show all user DB OP.")
 					return
 				}
@@ -158,15 +159,15 @@ func actinoAddFavorite(event *linebot.Event, action string, values url.Values) {
 	toggleMessage := ""
 	userId := values.Get("user_id")
 	newFavoriteArticle := values.Get("url")
-	userFavorite := &controllers.UserFavorite{
+	userFavorite := models.UserFavorite{
 		UserId:    userId,
 		Favorites: []string{newFavoriteArticle},
 	}
 	log.Println("Add Fav UID", userFavorite.UserId, " Fav[]=", userFavorite.Favorites)
 	latestFavArticles := []string{}
-	if record, err := userFavorite.Get(meta); err != nil {
+	if record, err := meta.Db.Get(userId); err != nil {
 		meta.Log.Println("User data is not created, create a new one")
-		userFavorite.Add(meta)
+		meta.Db.Add(userFavorite)
 		latestFavArticles = append(latestFavArticles, newFavoriteArticle)
 	} else {
 		meta.Log.Println("Record found, update it", record)
@@ -181,7 +182,7 @@ func actinoAddFavorite(event *linebot.Event, action string, values url.Values) {
 		}
 		latestFavArticles = oldRecords
 		userFavorite.Favorites = oldRecords
-		userFavorite.Update(meta)
+		meta.Db.Update(userFavorite)
 	}
 	sendTextMessage(event, toggleMessage)
 }
@@ -189,15 +190,11 @@ func actinoAddFavorite(event *linebot.Event, action string, values url.Values) {
 func actionShowFavorite(event *linebot.Event, action string, values url.Values) {
 	columnCount := 9
 	userId := values.Get("user_id")
-	userFavorite := &controllers.UserFavorite{
-		UserId:    userId,
-		Favorites: []string{},
-	}
 
 	if currentPage, err := strconv.Atoi(values.Get("page")); err != nil {
 		meta.Log.Println("Unable to parse parameters", values)
 	} else {
-		userData, _ := userFavorite.Get(meta)
+		userData, _ := meta.Db.Get(userId)
 
 		// 	// reverse slice
 		for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
@@ -339,11 +336,7 @@ func getCarouseTemplate(userId string, records []models.ArticleDocument) (templa
 	}
 
 	columnList := []*linebot.CarouselColumn{}
-	userFavorite := &controllers.UserFavorite{
-		UserId:    userId,
-		Favorites: []string{},
-	}
-	userData, _ := userFavorite.Get(meta)
+	userData, _ := meta.Db.Get(userId)
 	favLabel := ""
 
 	for _, result := range records {
@@ -409,13 +402,9 @@ func getUserNameById(userId string) (userDisplayName string) {
 }
 
 func textHander(event *linebot.Event, message string) {
-	userFavorite := &controllers.UserFavorite{
-		UserId:    event.Source.UserID,
-		Favorites: []string{},
-	}
-	if _, err := userFavorite.Get(meta); err != nil {
+	if _, err := meta.Db.Get(event.Source.UserID); err != nil {
 		meta.Log.Println("User data is not created, create a new one")
-		userFavorite.Add(meta)
+		meta.Db.Add(models.UserFavorite{UserId: event.Source.UserID})
 	}
 	log.Println("txMSG=", message)
 	switch message {

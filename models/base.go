@@ -7,8 +7,8 @@ type UserFavorite struct {
 }
 
 type UserFavData interface {
-	Add(meta *Model)
-	Get(meta *Model) (result *UserFavorite, err error)
-	Update(meta *Model) (err error)
-	GetAll(meta *Model) (result []UserFavorite, err error)
+	Add(user UserFavorite)
+	Get(uid string) (result *UserFavorite, err error)
+	ShowAll() (result []UserFavorite, err error)
+	Update(user UserFavorite) (err error)
 }
