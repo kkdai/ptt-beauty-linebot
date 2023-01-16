@@ -17,9 +17,7 @@ var logRoot = "logs"
 var no_db = true
 
 func main() {
-
 	logFile, _ := initLogFile()
-	// dbHostPort := os.Getenv("MongoDBHostPort")
 	defer logFile.Close()
 
 	url := os.Getenv("DATABASE_URL")
