@@ -177,6 +177,7 @@ func actinoAddFavorite(event *linebot.Event, action string, values url.Values) {
 			oldRecords = utils.RemoveStringItem(oldRecords, idx)
 			toggleMessage = "已從最愛中移除"
 		} else {
+			meta.Log.Println(newFavoriteArticle, "新增最愛")
 			oldRecords = append(oldRecords, newFavoriteArticle)
 			toggleMessage = "已新增至最愛"
 		}
