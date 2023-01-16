@@ -39,7 +39,7 @@ func (u *PGSql) Get(uid string) (result *UserFavorite, err error) {
 		Where("user_id = ?", uid).
 		Select()
 	if err != nil {
-		log.Println(err)
+		log.Println("Get err:", err)
 		return nil, err
 	}
 	log.Println("UserFavorite DB result= ", u.data)
@@ -56,7 +56,7 @@ func (u *PGSql) ShowAll() (result []UserFavorite, err error) {
 	}
 	log.Println("***Start server all users =", ret)
 	if err != nil {
-		log.Println("open file error !")
+		log.Println("open file error:", err)
 	}
 
 	return ret, nil
@@ -69,7 +69,7 @@ func (u *PGSql) Update(user UserFavorite) (err error) {
 		Where("user_id = ?", user.UserId).
 		Update()
 	if err != nil {
-		log.Println(err)
+		log.Println("update err:", err)
 	}
 	// Update success, replace to memory.
 	u.data = user
@@ -85,6 +85,7 @@ func createSchema(db *pg.DB) error {
 		err := db.Model(model).CreateTable(&orm.CreateTableOptions{
 			IfNotExists: true})
 		if err != nil {
+			log.Println("createSchema err:", err)
 			return err
 		}
 	}
