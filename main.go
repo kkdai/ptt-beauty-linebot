@@ -5,7 +5,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/go-pg/pg/v10"
 	"github.com/kkdai/linebot-ptt-beauty/bots"
 	"github.com/kkdai/linebot-ptt-beauty/models"
 	"github.com/kkdai/linebot-ptt-beauty/utils"
@@ -21,11 +20,7 @@ func main() {
 	defer logFile.Close()
 
 	url := os.Getenv("DATABASE_URL")
-	options, _ := pg.ParseURL(url)
-	db := pg.Connect(options)
-	meta.Db = db
-	defer db.Close()
-
+	meta.Db = models.NewPGSql(url)
 	logger = utils.GetLogger(logFile)
 	meta.Log = logger
 

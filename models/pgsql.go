@@ -62,16 +62,17 @@ func (u *PGSql) ShowAll() (result []UserFavorite, err error) {
 	return ret, nil
 }
 
-func (u *PGSql) Update(uid string) (err error) {
+func (u *PGSql) Update(user UserFavorite) (err error) {
 	log.Println("***Update Fav User=", u)
-
-	_, err = u.Db.Model(u.data).
-		Set("favorites = ?", u.data.Favorites).
-		Where("user_id = ?", u.data.UserId).
+	_, err = u.Db.Model(user).
+		Set("favorites = ?", user.Favorites).
+		Where("user_id = ?", user.UserId).
 		Update()
 	if err != nil {
 		log.Println(err)
 	}
+	// Update success, replace to memory.
+	u.data = user
 	return nil
 }
 
