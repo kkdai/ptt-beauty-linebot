@@ -26,44 +26,43 @@ func NewPGSql(url string) *PGSql {
 	}
 }
 
-func (u *PGSql) Add(meta *Model) {
-	_, err := u.Db.Model(u).Insert()
+func (u *PGSql) Add(user UserFavorite) {
+	_, err := u.Db.Model(user).Insert()
 	if err != nil {
 		log.Println(err)
 	}
 }
 
-func (u *PGSql) Get(meta *Model) (result *UserFavorite, err error) {
-	log.Println("***Get Fav uUID=", u.data.UserId)
-	userFav := UserFavorite{}
-	err = u.Db.Model(&userFav).
-		Where("user_id = ?", u.data.UserId).
+func (u *PGSql) Get(uid string) (result *UserFavorite, err error) {
+	log.Println("***Get Fav uUID=", uid)
+	err = u.Db.Model(&u.data).
+		Where("user_id = ?", uid).
 		Select()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	u.data = userFav
 	log.Println("UserFavorite DB result= ", u.data)
-	return &userFav, nil
+	return &u.data, nil
 }
 
-func (u *PGSql) GetAll(meta *Model) (result []UserFavorite, err error) {
+// ShowAll: Print all result.
+func (u *PGSql) ShowAll() (result []UserFavorite, err error) {
 	log.Println("***Get All DB")
-	users := []UserFavorite{}
-	err = u.Db.Model(&users).Select()
+	ret := []UserFavorite{}
+	err = u.Db.Model(&ret).Select()
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println("***Start server all users =", users)
+	log.Println("***Start server all users =", ret)
 	if err != nil {
 		log.Println("open file error !")
 	}
 
-	return users, nil
+	return ret, nil
 }
 
-func (u *PGSql) Update(meta *Model) (err error) {
+func (u *PGSql) Update(uid string) (err error) {
 	log.Println("***Update Fav User=", u)
 
 	_, err = u.Db.Model(u.data).
@@ -73,16 +72,6 @@ func (u *PGSql) Update(meta *Model) (err error) {
 	if err != nil {
 		log.Println(err)
 	}
-	return nil
-}
-
-func (u *PGSql) ShowAll(meta *Model) (err error) {
-	log.Println("***ShowAll  User -->")
-	err = u.Db.Model(&u.data).Select()
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println("***Show all users =", u.data)
 	return nil
 }
 
