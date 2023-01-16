@@ -11,3 +11,5 @@ services:
     sync: false
   - key: ChannelSecret
     sync: false
+  - key: DATABASE_URL
+    sync: false
