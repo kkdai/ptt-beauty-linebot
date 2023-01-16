@@ -183,7 +183,7 @@ func actinoAddFavorite(event *linebot.Event, action string, values url.Values) {
 		}
 		latestFavArticles = oldRecords
 		userFavorite.Favorites = oldRecords
-		meta.Db.Update(userFavorite)
+		meta.Db.Update(&userFavorite)
 	}
 	sendTextMessage(event, toggleMessage)
 }
