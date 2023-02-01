@@ -251,7 +251,11 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		)
 
 		template := getCarouseTemplate(event.Source.UserID, favDocuments)
-		template.Columns = append(template.Columns, tmpColumn)
+
+		// If Fav == 0, ski[]
+		if len(favDocuments) > 0 {
+			template.Columns = append(template.Columns, tmpColumn)
+		}
 		sendCarouselMessage(event, template, "最愛照片已送達")
 	}
 }
