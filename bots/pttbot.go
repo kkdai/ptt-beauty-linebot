@@ -250,13 +250,27 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 			linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
 		)
 
-		template := getCarouseTemplate(event.Source.UserID, favDocuments)
-
-		// If Fav == 0, ski[]
+		// If Fav >= 0, put continue in last.
 		if len(favDocuments) > 0 {
+			template := getCarouseTemplate(event.Source.UserID, favDocuments)
 			template.Columns = append(template.Columns, tmpColumn)
+			sendCarouselMessage(event, template, "最愛照片已送達")
+		} else {
+			empStr := "你沒有任何最愛照片，快來選吧。"
+			// Fav == 0, skip it.
+			empColumn := linebot.NewCarouselColumn(
+				defaultThumbnail,
+				DefaultTitle,
+				empStr,
+				linebot.NewMessageAction(ActionHelp, ActionHelp),
+				linebot.NewPostbackAction(previousText, previousData, "", "", "", ""),
+				linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
+			)
+
+			emptyResult := linebot.NewCarouselTemplate(empColumn)
+			sendCarouselMessage(event, emptyResult, empStr)
 		}
-		sendCarouselMessage(event, template, "最愛照片已送達")
+
 	}
 }
 
