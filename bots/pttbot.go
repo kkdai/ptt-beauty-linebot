@@ -198,7 +198,7 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		userData, _ := meta.Db.Get(userId)
 
 		// reverse slice
-		if len(userData.Favorites) > 0 {
+		if userData != nil && len(userData.Favorites) > 0 {
 			for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
 				opp := len(userData.Favorites) - 1 - i
 				userData.Favorites[i], userData.Favorites[opp] = userData.Favorites[opp], userData.Favorites[i]
@@ -208,18 +208,18 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		startIdx := currentPage * columnCount
 		endIdx := startIdx + columnCount
 		lastPage := false
-		if endIdx > len(userData.Favorites)-1 || startIdx > endIdx {
-			endIdx = len(userData.Favorites)
-			lastPage = true
+		if userData != nil && len(userData.Favorites) > 0 {
+			if endIdx > len(userData.Favorites)-1 || startIdx > endIdx {
+				endIdx = len(userData.Favorites)
+				lastPage = true
+			}
 		}
 
-		// log.Println("Start Index", startIdx)
-		// log.Println("End Index", endIdx)
-		// log.Println("Total Length", len(userData.Favorites))
-
 		favDocuments := []models.ArticleDocument{}
-		favs := userData.Favorites[startIdx:endIdx]
-		log.Println(favs)
+		if userData != nil && len(userData.Favorites) > 0 {
+			favs := userData.Favorites[startIdx:endIdx]
+			log.Println(favs)
+		}
 
 		for i := startIdx; i < endIdx; i++ {
 			url := userData.Favorites[i]
