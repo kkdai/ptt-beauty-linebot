@@ -12,12 +12,12 @@
 
 - [x] Memory DB
 - [x] PostgresSQL  
-- [ ] Github issue. [#16](#16)
-- [ ] Firestore.  [#1](#1)
+- [ ] Github issue. [#16](https://github.com/kkdai/ptt-beauty-linebot/issues/16)
+- [ ] Firestore.  [#1](https://github.com/kkdai/ptt-beauty-linebot/issues/1)
 
 # Working in Progress Features
 
-- [ ] Search keyword on ptt. [#17](#17)
+- [ ] Search keyword on ptt. [#17](https://github.com/kkdai/ptt-beauty-linebot/issues/17)
 
 # How to use it
 
