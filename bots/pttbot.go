@@ -197,10 +197,12 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 	} else {
 		userData, _ := meta.Db.Get(userId)
 
-		// 	// reverse slice
-		for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
-			opp := len(userData.Favorites) - 1 - i
-			userData.Favorites[i], userData.Favorites[opp] = userData.Favorites[opp], userData.Favorites[i]
+		// reverse slice
+		if len(userData.Favorites) > 0 {
+			for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
+				opp := len(userData.Favorites) - 1 - i
+				userData.Favorites[i], userData.Favorites[opp] = userData.Favorites[opp], userData.Favorites[i]
+			}
 		}
 
 		startIdx := currentPage * columnCount
