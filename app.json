@@ -25,7 +25,7 @@
       "required": true
     },
     "DATABASE_URL": {
-      "description": "PG SQL DB address, If empty using memory as DB.",
+      "description": "PostgresSQL DB address, If empty using memory as DB.",
       "required": false
     }
   }

@@ -2,6 +2,12 @@
 
  [![GoDoc](https://godoc.org/github.com/kkdai/ptt-beauty-linebot.svg?status.svg)](https://godoc.org/github.com/kkdai/ptt-beauty-linebot) [![goreportcard.com](https://goreportcard.com/badge/github.com/kkdai/ptt-beauty-linebot)](https://goreportcard.com/report/github.com/kkdai/ptt-beauty-linebot) [![Go](https://github.com/kkdai/ptt-beauty-linebot/actions/workflows/go.yml/badge.svg)](https://github.com/kkdai/ptt-beauty-linebot/actions/workflows/go.yml)
 
+# Features
+
+- Easy use LINE Bot to check PTT Beauty board.
+- Save your favorite ptt posts.
+- For developer, you could easily to switch pgsql or memory DB by add environment "DATABASE_URL".
+
 # How to use it
 
 ## For User
