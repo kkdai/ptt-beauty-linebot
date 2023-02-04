@@ -197,30 +197,38 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 	} else {
 		userData, _ := meta.Db.Get(userId)
 
-		// reverse slice
-		if userData != nil && len(userData.Favorites) > 0 {
-			for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
-				opp := len(userData.Favorites) - 1 - i
-				userData.Favorites[i], userData.Favorites[opp] = userData.Favorites[opp], userData.Favorites[i]
-			}
+		// No userData or user has empty Fav, return!
+		if userData == nil || (userData != nil && len(userData.Favorites) == 0) {
+			empStr := "你沒有任何最愛照片，快來加入吧。"
+			// Fav == 0, skip it.
+			empColumn := linebot.NewCarouselColumn(
+				defaultThumbnail,
+				DefaultTitle,
+				empStr,
+				linebot.NewMessageAction(ActionHelp, ActionHelp),
+			)
+			emptyResult := linebot.NewCarouselTemplate(empColumn)
+			sendCarouselMessage(event, emptyResult, empStr)
 		}
 
 		startIdx := currentPage * columnCount
 		endIdx := startIdx + columnCount
 		lastPage := false
-		if userData != nil && len(userData.Favorites) > 0 {
-			if endIdx > len(userData.Favorites)-1 || startIdx > endIdx {
-				endIdx = len(userData.Favorites)
-				lastPage = true
-			}
+
+		// reverse slice
+		for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
+			opp := len(userData.Favorites) - 1 - i
+			userData.Favorites[i], userData.Favorites[opp] = userData.Favorites[opp], userData.Favorites[i]
+		}
+
+		if endIdx > len(userData.Favorites)-1 || startIdx > endIdx {
+			endIdx = len(userData.Favorites)
+			lastPage = true
 		}
 
 		favDocuments := []models.ArticleDocument{}
-		if userData != nil && len(userData.Favorites) > 0 {
-			favs := userData.Favorites[startIdx:endIdx]
-			log.Println(favs)
-		}
-
+		favs := userData.Favorites[startIdx:endIdx]
+		log.Println(favs)
 		for i := startIdx; i < endIdx; i++ {
 			url := userData.Favorites[i]
 			tmpRecord, _ := controllers.GetOne(url)
@@ -252,27 +260,9 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 			linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
 		)
 
-		// If Fav >= 0, put continue in last.
-		if len(favDocuments) > 0 {
-			template := getCarouseTemplate(event.Source.UserID, favDocuments)
-			template.Columns = append(template.Columns, tmpColumn)
-			sendCarouselMessage(event, template, "最愛照片已送達")
-		} else {
-			empStr := "你沒有任何最愛照片，快來選吧。"
-			// Fav == 0, skip it.
-			empColumn := linebot.NewCarouselColumn(
-				defaultThumbnail,
-				DefaultTitle,
-				empStr,
-				linebot.NewMessageAction(ActionHelp, ActionHelp),
-				linebot.NewPostbackAction(previousText, previousData, "", "", "", ""),
-				linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
-			)
-
-			emptyResult := linebot.NewCarouselTemplate(empColumn)
-			sendCarouselMessage(event, emptyResult, empStr)
-		}
-
+		template := getCarouseTemplate(event.Source.UserID, favDocuments)
+		template.Columns = append(template.Columns, tmpColumn)
+		sendCarouselMessage(event, template, "最愛照片已送達")
 	}
 }
 
