@@ -219,13 +219,12 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		if userData != nil && len(userData.Favorites) > 0 {
 			favs := userData.Favorites[startIdx:endIdx]
 			log.Println(favs)
-		}
-
-		for i := startIdx; i < endIdx; i++ {
-			url := userData.Favorites[i]
-			tmpRecord, _ := controllers.GetOne(url)
-			// log.Printf("Favorites[%d] url=%s title=%s \n", i, url, tmpRecord.ArticleTitle)
-			favDocuments = append(favDocuments, *tmpRecord)
+			for i := startIdx; i < endIdx; i++ {
+				url := userData.Favorites[i]
+				tmpRecord, _ := controllers.GetOne(url)
+				// log.Printf("Favorites[%d] url=%s title=%s \n", i, url, tmpRecord.ArticleTitle)
+				favDocuments = append(favDocuments, *tmpRecord)
+			}
 		}
 
 		// append next page column
