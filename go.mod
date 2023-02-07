@@ -6,6 +6,7 @@ go 1.17
 require (
 	cloud.google.com/go/firestore v1.9.0
 	github.com/go-pg/pg/v10 v10.11.0
+	github.com/google/go-github/v50 v50.0.0
 	github.com/kkdai/photomgr v0.6.0
 	github.com/line/line-bot-sdk-go/v7 v7.16.0
 	mvdan.cc/xurls/v2 v2.3.0
@@ -22,6 +23,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

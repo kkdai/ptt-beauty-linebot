@@ -20,8 +20,13 @@ func main() {
 	defer logFile.Close()
 
 	url := os.Getenv("DATABASE_URL")
+	gitUrl := os.Getenv("GITHUB_URL")
 	if url != "" {
+		// Use PostgresSQL as DB.
 		meta.Db = models.NewPGSql(url)
+	} else if gitUrl != "" {
+		// Use Github Issue as DB.
+		meta.Db = models.NewGithubDB(gitUrl)
 	} else {
 		//Use memory as DB
 		meta.Db = models.NewMemDB()

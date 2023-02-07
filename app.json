@@ -27,6 +27,10 @@
     "DATABASE_URL": {
       "description": "PostgresSQL DB address, If empty using memory as DB.",
       "required": false
+    },
+    "GITHUB_URL": {
+      "description": "Use github issue as DB, name/repo/token",
+      "required": false
     }
   }
 }
