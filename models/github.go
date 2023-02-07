@@ -110,7 +110,7 @@ func splitMultiContent(cnt string) []string {
 }
 
 func mergeToContent(links []string) string {
-	return strings.Join(links[:], ",")
+	return strings.Join(links[:], "\n")
 }
 
 func (u *GithubDB) saveIssue(title, body string) error {
