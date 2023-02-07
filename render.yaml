@@ -13,3 +13,5 @@ services:
     sync: false
   - key: DATABASE_URL
     sync: false
+  - key: GITHUB_URL
+    sync: false
