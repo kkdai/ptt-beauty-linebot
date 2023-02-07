@@ -7,12 +7,13 @@
 - Easy use LINE Bot to check PTT Beauty board.
 - Save your favorite ptt posts.
 - For developer, you could easily to switch pgsql or memory DB by add environment "DATABASE_URL".
+- For developer, you could use Github Issue as DB to storage your favorite links.
 
 # Support DB
 
 - [x] Memory DB
 - [x] PostgresSQL  
-- [ ] Github issue. [#16](https://github.com/kkdai/ptt-beauty-linebot/issues/16)
+- [x] Github issue.
 - [ ] Firestore.  [#1](https://github.com/kkdai/ptt-beauty-linebot/issues/1)
 
 # Working in Progress Features
