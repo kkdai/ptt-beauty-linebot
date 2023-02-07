@@ -7,7 +7,7 @@
 - Easy use LINE Bot to check PTT Beauty board.
 - Save your favorite ptt posts.
 - For developer, you could easily to switch pgsql or memory DB by add environment "DATABASE_URL".
-- For developer, you could use Github Issue as DB to storage your favorite links.
+- For developer, you could use Github Issue as DB to storage your favorite links by add environment "GITHUB_URL".
 
 # Support DB
 
