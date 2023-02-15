@@ -52,7 +52,7 @@ func Get(page int, perPage int) (results []models.ArticleDocument, err error) {
 	return ret, nil
 }
 
-func GetRandom(count int, keyword string) (results []models.ArticleDocument, err error) {
+func GetRandom(count int) (results []models.ArticleDocument, err error) {
 	rands := utils.GetRandomIntSet(100, 10)
 	ptt := NewPTT()
 	pCount := ptt.ParsePttByNumber(101, 0)
@@ -64,6 +64,29 @@ func GetRandom(count int, keyword string) (results []models.ArticleDocument, err
 		title := ptt.GetPostTitleByIndex(rands[i])
 		post := models.ArticleDocument{}
 		url := ptt.GetPostUrlByIndex(rands[i])
+		post.ArticleTitle = title
+		post.URL = url
+		post.ArticleID = utils.GetPttIDFromURL(url)
+		_, post.ImageLinks, post.MessageCount.Push, post.MessageCount.Boo = ptt.GetAllFromURL(url)
+		post.MessageCount.All = post.MessageCount.Push + post.MessageCount.Boo
+		post.MessageCount.Count = ptt.GetPostStarByIndex(i)
+		ret = append(ret, post)
+	}
+	return ret, nil
+}
+
+func GetKeyword(count int, keyword string) (results []models.ArticleDocument, err error) {
+
+	ptt := NewPTT()
+	pCount := ptt.ParseSearchByKeyword(keyword)
+	if pCount == 0 {
+		return nil, errors.New("NotFound")
+	}
+	var ret []models.ArticleDocument
+	for i := 0; i < count; i++ {
+		title := ptt.GetPostTitleByIndex(i)
+		post := models.ArticleDocument{}
+		url := ptt.GetPostUrlByIndex(i)
 		post.ArticleTitle = title
 		post.URL = url
 		post.ArticleID = utils.GetPttIDFromURL(url)

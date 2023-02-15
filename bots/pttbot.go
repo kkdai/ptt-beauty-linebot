@@ -268,7 +268,7 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 
 func actionRandom(event *linebot.Event, values url.Values) {
 	var label string
-	records, _ := controllers.GetRandom(maxCountOfCarousel, "")
+	records, _ := controllers.GetRandom(maxCountOfCarousel)
 	label = "隨機表特已送到囉"
 	template := getCarouseTemplate(event.Source.UserID, records)
 	if template != nil {
@@ -423,7 +423,7 @@ func textHander(event *linebot.Event, message string) {
 		template := getMenuButtonTemplateV2(event, DefaultTitle)
 		sendCarouselMessage(event, template, "我能為您做什麼？")
 	case ActionRandom:
-		records, _ := controllers.GetRandom(maxCountOfCarousel, "")
+		records, _ := controllers.GetRandom(maxCountOfCarousel)
 		template := getCarouseTemplate(event.Source.UserID, records)
 		sendCarouselMessage(event, template, "隨機表特已送到囉")
 	case ActionNewest:
@@ -435,17 +435,13 @@ func textHander(event *linebot.Event, message string) {
 		values.Set("user_id", event.Source.UserID)
 		values.Set("page", "0")
 		actionShowFavorite(event, "", values)
-	default:
-		template := getMenuButtonTemplateV2(event, DefaultTitle)
-		sendCarouselMessage(event, template, "我能為您做什麼？")
-		return
 	}
 
 	if event.Source.UserID != "" && event.Source.GroupID == "" && event.Source.RoomID == "" {
-		records, _ := controllers.GetRandom(maxCountOfCarousel, message)
+		records, _ := controllers.GetKeyword(10, message)
 		if len(records) > 0 {
 			template := getCarouseTemplate(event.Source.UserID, records)
-			sendCarouselMessage(event, template, "隨機表特已送到囉")
+			sendCarouselMessage(event, template, "搜尋表特已送到囉")
 		} else {
 			template := getMenuButtonTemplateV2(event, DefaultTitle)
 			sendCarouselMessage(event, template, "我能為您做什麼？")
