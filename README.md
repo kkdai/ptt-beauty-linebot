@@ -18,7 +18,7 @@
 
 # Working in Progress Features
 
-- [ ] Search keyword on ptt. [#17](https://github.com/kkdai/ptt-beauty-linebot/issues/17)
+- [x] Search keyword on ptt. [#17](https://github.com/kkdai/ptt-beauty-linebot/issues/17)
 
 # How to use it
 
