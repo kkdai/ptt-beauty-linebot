@@ -8,7 +8,7 @@ require (
 	github.com/go-pg/pg/v10 v10.11.0
 	github.com/google/go-github/v50 v50.0.0
 	github.com/kkdai/photomgr v0.7.0
-	github.com/line/line-bot-sdk-go/v7 v7.16.0
+	github.com/line/line-bot-sdk-go/v7 v7.19.0
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
 	mvdan.cc/xurls/v2 v2.3.0
 )
