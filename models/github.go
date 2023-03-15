@@ -64,10 +64,12 @@ func (u *GithubDB) Add(user UserFavorite) {
 func (u *GithubDB) Get(uid string) (result *UserFavorite, err error) {
 	if v, _, err := u.getIssue(uid); err != nil {
 		//cannot find.
+		log.Println("cannot find any DB, err:", err)
 		return nil, err
 	} else {
 		favs := splitMultiContent(v)
 
+		log.Println("All Fav:", favs)
 		return &UserFavorite{
 			UserId:    uid,
 			Favorites: favs,
@@ -137,7 +139,6 @@ func (u *GithubDB) getIssue(title string) (string, int, error) {
 
 	log.Println("issue ret:", ret)
 	for _, v := range ret.Issues {
-		log.Println("return issue:", v)
 		log.Println("Issue Num:", v.Number)
 		log.Println("Body:", v.Body)
 		log.Println("Comments:", v.Comments)

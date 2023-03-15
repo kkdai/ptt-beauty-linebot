@@ -193,7 +193,7 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 	userId := values.Get("user_id")
 
 	if currentPage, err := strconv.Atoi(values.Get("page")); err != nil {
-		meta.Log.Println("Unable to parse parameters", values)
+		log.Println("Unable to parse parameters", values)
 	} else {
 		userData, _ := meta.Db.Get(userId)
 
