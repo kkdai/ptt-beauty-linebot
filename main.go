@@ -5,13 +5,13 @@ import (
 	"os"
 	"path"
 
+	"github.com/kkdai/favdb"
 	"github.com/kkdai/linebot-ptt-beauty/bots"
-	"github.com/kkdai/linebot-ptt-beauty/models"
 	"github.com/kkdai/linebot-ptt-beauty/utils"
 )
 
 var logger *log.Logger
-var meta = &models.Model{}
+var meta = &favdb.Model{}
 var logRoot = "logs"
 var no_db = true
 
@@ -23,13 +23,13 @@ func main() {
 	gitUrl := os.Getenv("GITHUB_URL")
 	if url != "" {
 		// Use PostgresSQL as DB.
-		meta.Db = models.NewPGSql(url)
+		meta.Db = favdb.NewPGSql(url)
 	} else if gitUrl != "" {
 		// Use Github Issue as DB.
-		meta.Db = models.NewGithubDB(gitUrl)
+		meta.Db = favdb.NewGithubDB(gitUrl)
 	} else {
 		//Use memory as DB
-		meta.Db = models.NewMemDB()
+		meta.Db = favdb.NewMemDB()
 	}
 
 	logger = utils.GetLogger(logFile)
