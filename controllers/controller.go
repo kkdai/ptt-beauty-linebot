@@ -4,7 +4,8 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/kkdai/linebot-ptt-beauty/models"
+	"github.com/kkdai/favdb"
+
 	"github.com/kkdai/linebot-ptt-beauty/utils"
 	. "github.com/kkdai/photomgr"
 )
@@ -15,9 +16,9 @@ type UserFavorite struct {
 	Favorites []string `json:"favorites" bson:"favorites"`
 }
 
-func GetOne(url string) (result *models.ArticleDocument, err error) {
+func GetOne(url string) (result *favdb.ArticleDocument, err error) {
 	ptt := NewPTT()
-	post := models.ArticleDocument{}
+	post := favdb.ArticleDocument{}
 	post.URL = url
 	post.ArticleID = utils.GetPttIDFromURL(url)
 	post.ArticleTitle = ptt.GetUrlTitle(url)
@@ -30,14 +31,14 @@ func GetOne(url string) (result *models.ArticleDocument, err error) {
 	return &post, nil
 }
 
-func Get(page int, perPage int) (results []models.ArticleDocument, err error) {
-	var ret []models.ArticleDocument
+func Get(page int, perPage int) (results []favdb.ArticleDocument, err error) {
+	var ret []favdb.ArticleDocument
 	ptt := NewPTT()
 	count := ptt.ParsePttPageByIndex(page, true)
 	for i := 0; i < count && i < perPage; i++ {
 		title := ptt.GetPostTitleByIndex(i)
 		if utils.CheckTitleWithBeauty(title) {
-			post := models.ArticleDocument{}
+			post := favdb.ArticleDocument{}
 			url := ptt.GetPostUrlByIndex(i)
 			post.ArticleTitle = title
 			post.URL = url
@@ -52,17 +53,17 @@ func Get(page int, perPage int) (results []models.ArticleDocument, err error) {
 	return ret, nil
 }
 
-func GetRandom(count int) (results []models.ArticleDocument, err error) {
+func GetRandom(count int) (results []favdb.ArticleDocument, err error) {
 	rands := utils.GetRandomIntSet(100, 10)
 	ptt := NewPTT()
 	pCount := ptt.ParsePttByNumber(101, 0)
 	if pCount == 0 {
 		return nil, errors.New("NotFound")
 	}
-	var ret []models.ArticleDocument
+	var ret []favdb.ArticleDocument
 	for i := 0; i < count; i++ {
 		title := ptt.GetPostTitleByIndex(rands[i])
-		post := models.ArticleDocument{}
+		post := favdb.ArticleDocument{}
 		url := ptt.GetPostUrlByIndex(rands[i])
 		post.ArticleTitle = title
 		post.URL = url
@@ -75,17 +76,17 @@ func GetRandom(count int) (results []models.ArticleDocument, err error) {
 	return ret, nil
 }
 
-func GetKeyword(count int, keyword string) (results []models.ArticleDocument, err error) {
+func GetKeyword(count int, keyword string) (results []favdb.ArticleDocument, err error) {
 
 	ptt := NewPTT()
 	pCount := ptt.ParseSearchByKeyword(keyword)
 	if pCount == 0 {
 		return nil, errors.New("NotFound")
 	}
-	var ret []models.ArticleDocument
+	var ret []favdb.ArticleDocument
 	for i := 0; i < count; i++ {
 		title := ptt.GetPostTitleByIndex(i)
-		post := models.ArticleDocument{}
+		post := favdb.ArticleDocument{}
 		url := ptt.GetPostUrlByIndex(i)
 		post.ArticleTitle = title
 		post.URL = url
@@ -98,17 +99,17 @@ func GetKeyword(count int, keyword string) (results []models.ArticleDocument, er
 	return ret, nil
 }
 
-func GetMostLike(total int, limit int) (results []models.ArticleDocument, err error) {
+func GetMostLike(total int, limit int) (results []favdb.ArticleDocument, err error) {
 	ptt := NewPTT()
 	pCount := ptt.ParsePttByNumber(total, 0)
 	if pCount == 0 {
 		return nil, errors.New("NotFound")
 	}
 
-	var ret []models.ArticleDocument
+	var ret []favdb.ArticleDocument
 	for i := 0; i < pCount; i++ {
 		title := ptt.GetPostTitleByIndex(i)
-		post := models.ArticleDocument{}
+		post := favdb.ArticleDocument{}
 		url := ptt.GetPostUrlByIndex(i)
 		post.ArticleTitle = title
 		post.URL = url
@@ -117,7 +118,7 @@ func GetMostLike(total int, limit int) (results []models.ArticleDocument, err er
 		ret = append(ret, post)
 	}
 	//Sort it.
-	sort.Sort(models.AllArticles(ret))
+	sort.Sort(favdb.AllArticles(ret))
 
 	//Get the first limit (10)
 	ret = ret[0:limit]

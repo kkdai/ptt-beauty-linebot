@@ -11,14 +11,14 @@ import (
 
 	"mvdan.cc/xurls/v2"
 
+	"github.com/kkdai/favdb"
 	"github.com/kkdai/linebot-ptt-beauty/controllers"
-	"github.com/kkdai/linebot-ptt-beauty/models"
 	"github.com/kkdai/linebot-ptt-beauty/utils"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
 var bot *linebot.Client
-var meta *models.Model
+var meta *favdb.Model
 var maxCountOfCarousel = 10
 var defaultImage = "https://i.imgur.com/WAnWk7K.png"
 var defaultThumbnail = "https://i.imgur.com/StcRAPB.png"
@@ -44,7 +44,7 @@ const (
 )
 
 // InitLineBot: init LINE bot
-func InitLineBot(m *models.Model, runMode string, sslCertPath string, sslPKeyPath string) {
+func InitLineBot(m *favdb.Model, runMode string, sslCertPath string, sslPKeyPath string) {
 
 	var err error
 	meta = m
@@ -159,7 +159,7 @@ func actinoAddFavorite(event *linebot.Event, action string, values url.Values) {
 	toggleMessage := ""
 	userId := values.Get("user_id")
 	newFavoriteArticle := values.Get("url")
-	userFavorite := models.UserFavorite{
+	userFavorite := favdb.UserFavorite{
 		UserId:    userId,
 		Favorites: []string{newFavoriteArticle},
 	}
@@ -226,7 +226,7 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 			lastPage = true
 		}
 
-		favDocuments := []models.ArticleDocument{}
+		favDocuments := []favdb.ArticleDocument{}
 		favs := userData.Favorites[startIdx:endIdx]
 		log.Println(favs)
 		for i := startIdx; i < endIdx; i++ {
@@ -340,7 +340,7 @@ func actionNewest(event *linebot.Event, values url.Values) {
 	}
 }
 
-func getCarouseTemplate(userId string, records []models.ArticleDocument) (template *linebot.CarouselTemplate) {
+func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (template *linebot.CarouselTemplate) {
 	if len(records) == 0 {
 		log.Println("err1")
 		return nil
@@ -415,7 +415,7 @@ func getUserNameById(userId string) (userDisplayName string) {
 func textHander(event *linebot.Event, message string) {
 	if _, err := meta.Db.Get(event.Source.UserID); err != nil {
 		meta.Log.Println("User data is not created, create a new one")
-		meta.Db.Add(models.UserFavorite{UserId: event.Source.UserID})
+		meta.Db.Add(favdb.UserFavorite{UserId: event.Source.UserID})
 	}
 	log.Println("txMSG=", message)
 	switch message {
@@ -483,7 +483,7 @@ func sendTextMessage(event *linebot.Event, text string) {
 	}
 }
 
-func getImgCarousTemplate(record *models.ArticleDocument, values url.Values) (template *linebot.ImageCarouselTemplate) {
+func getImgCarousTemplate(record *favdb.ArticleDocument, values url.Values) (template *linebot.ImageCarouselTemplate) {
 	urls := record.ImageLinks
 	columnList := []*linebot.ImageCarouselColumn{}
 	targetUrl := values.Get("url")
