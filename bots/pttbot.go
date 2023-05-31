@@ -363,7 +363,7 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 		postBackData := fmt.Sprintf("action=%s&page=0&url=%s", ActionAllImage, result.URL)
 		text := fmt.Sprintf("%d 😍\t%d 😡", result.MessageCount.Push, result.MessageCount.Boo)
 
-		if imgUrlCounts > 0 {
+		if imgUrlCounts > 0 && len(result.ImageLinks[0]) > 0 {
 			thumnailUrl = result.ImageLinks[0]
 		}
 
@@ -371,13 +371,6 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 		if len(title) >= 40 {
 			title = title[0:38]
 		}
-		//meta.Log.Println("===============", idx)
-		//meta.Log.Println("Thumbnail Url = ", thumnailUrl)
-		//meta.Log.Println("Title = ", title)
-		//meta.Log.Println("Text = ", text)
-		//meta.Log.Println("URL = ", result.URL)
-		//meta.Log.Println("===============", idx)
-		//dataRandom := fmt.Sprintf("action=%s", ActionRandom)
 		dataAddFavorite := fmt.Sprintf("action=%s&user_id=%s&url=%s",
 			ActionAddFavorite, userId, result.URL)
 		tmpColumn := linebot.NewCarouselColumn(
@@ -386,7 +379,6 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 			text,
 			linebot.NewURIAction(ActionClick, result.URL),
 			linebot.NewPostbackAction(lable, postBackData, "", "", "", ""),
-			//linebot.NewPostbackAction(ActionRandom, dataRandom, "", ""),
 			linebot.NewPostbackAction(favLabel, dataAddFavorite, "", "", "", ""),
 		)
 		columnList = append(columnList, tmpColumn)
