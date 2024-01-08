@@ -1,13 +1,13 @@
 module github.com/kkdai/linebot-ptt-beauty
 
-// +heroku goVersion go1.17
-go 1.17
+// +heroku goVersion go1.21.1
+go 1.21.1
 
 require (
 	github.com/kkdai/favdb v0.2.2
-	github.com/kkdai/photomgr v0.7.0
-	github.com/line/line-bot-sdk-go/v7 v7.19.0
-	mvdan.cc/xurls/v2 v2.3.0
+	github.com/kkdai/photomgr v0.9.0
+	github.com/line/line-bot-sdk-go/v7 v7.21.0
+	mvdan.cc/xurls/v2 v2.5.0
 )
 
 require (
@@ -17,8 +17,8 @@ require (
 	cloud.google.com/go/firestore v1.10.0 // indirect
 	cloud.google.com/go/longrunning v0.5.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230528122434-6f98819771a1 // indirect
-	github.com/PuerkitoBio/goquery v1.8.0 // indirect
-	github.com/andybalholm/cascadia v1.3.1 // indirect
+	github.com/PuerkitoBio/goquery v1.8.1 // indirect
+	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
 	github.com/go-pg/pg/v10 v10.11.0 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
@@ -37,12 +37,12 @@ require (
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/crypto v0.16.0 // indirect
+	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.125.0 // indirect
