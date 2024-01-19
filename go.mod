@@ -5,7 +5,7 @@ go 1.21.1
 
 require (
 	github.com/kkdai/favdb v0.2.2
-	github.com/kkdai/photomgr v0.9.0
+	github.com/kkdai/photomgr v0.10.0
 	github.com/line/line-bot-sdk-go/v7 v7.21.0
 	mvdan.cc/xurls/v2 v2.5.0
 )
@@ -37,11 +37,11 @@ require (
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
+	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/net v0.20.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
