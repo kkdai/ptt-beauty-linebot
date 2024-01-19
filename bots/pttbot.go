@@ -365,6 +365,7 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 
 		if imgUrlCounts > 0 && len(result.ImageLinks[0]) > 0 {
 			thumnailUrl = result.ImageLinks[0]
+			log.Println("thumnailUrl=", thumnailUrl, " article link:", result.URL)
 		}
 
 		// Title's hard limit by Line
