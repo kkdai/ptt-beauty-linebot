@@ -382,6 +382,7 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 			linebot.NewPostbackAction(lable, postBackData, "", "", "", ""),
 			linebot.NewPostbackAction(favLabel, dataAddFavorite, "", "", "", ""),
 		)
+		log.Println("tmpColumn=", tmpColumn, thumnailUrl, title, text, lable, postBackData, dataAddFavorite)
 		columnList = append(columnList, tmpColumn)
 	}
 	template = linebot.NewCarouselTemplate(columnList...)
