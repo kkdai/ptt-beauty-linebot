@@ -102,12 +102,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				if message.Text == "showall" {
 					log.Println("get show all user OP--->")
-					// userFavorite := &controllers.UserFavorite{
-					// 	UserId:    event.Source.UserID,
-					// 	Favorites: []string{},
-					// }
 					meta.Db.ShowAll()
-					// userFavorite.ShowAll(meta)
 					sendTextMessage(event, "Already show all user DB OP.")
 					return
 				}
@@ -209,11 +204,11 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 			)
 			emptyResult := linebot.NewCarouselTemplate(empColumn)
 			sendCarouselMessage(event, emptyResult, empStr)
+			return
 		}
 
 		startIdx := currentPage * columnCount
 		endIdx := startIdx + columnCount
-		lastPage := false
 
 		// reverse slice
 		for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
@@ -223,7 +218,7 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 
 		if endIdx > len(userData.Favorites)-1 || startIdx > endIdx {
 			endIdx = len(userData.Favorites)
-			lastPage = true
+			// lastPage = true
 		}
 
 		favDocuments := []favdb.ArticleDocument{}
@@ -232,35 +227,25 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		for i := startIdx; i < endIdx; i++ {
 			url := userData.Favorites[i]
 			tmpRecord, _ := controllers.GetOne(url)
-			// log.Printf("Favorites[%d] url=%s title=%s \n", i, url, tmpRecord.ArticleTitle)
+			//if no image remove it and skip, and update DB.
+			if len(tmpRecord.ImageLinks) == 0 {
+				favs = utils.RemoveStringItem(favs, i)
+				log.Printf("Favorites[%d] url=%s is missing, ---REMOVE IT--- \n", i, url)
+				userData.Favorites = favs
+				meta.Db.Update(userData)
+				continue
+			}
+			log.Printf("Favorites[%d] url=%s title=%s \n", i, url, tmpRecord.ArticleTitle)
 			favDocuments = append(favDocuments, *tmpRecord)
 		}
-
-		// append next page column
-		previousPage := currentPage - 1
-		if previousPage < 0 {
-			previousPage = 0
-		}
-		nextPage := currentPage + 1
-		previousData := fmt.Sprintf("action=%s&page=%d&user_id=%s", ActonShowFav, previousPage, userId)
-		nextData := fmt.Sprintf("action=%s&page=%d&user_id=%s", ActonShowFav, nextPage, userId)
-		previousText := fmt.Sprintf("上一頁 %d", previousPage)
-		nextText := fmt.Sprintf("下一頁 %d", nextPage)
-		if lastPage == true {
-			nextData = "--"
-			nextText = "--"
-		}
-
-		tmpColumn := linebot.NewCarouselColumn(
-			defaultThumbnail,
-			DefaultTitle,
-			"繼續看？",
-			linebot.NewMessageAction(ActionHelp, ActionHelp),
-			linebot.NewPostbackAction(previousText, previousData, "", "", "", ""),
-			linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
-		)
+		log.Println("favDocuments=", len(favDocuments), favDocuments)
 
 		template := getCarouseTemplate(event.Source.UserID, favDocuments)
+		if template == nil {
+			meta.Log.Println("Unable to get template", values)
+			return
+		}
+		tmpColumn := createCarouselColumn(currentPage, ActonShowFav)
 		template.Columns = append(template.Columns, tmpColumn)
 		sendCarouselMessage(event, template, "最愛照片已送達")
 	}
@@ -316,30 +301,14 @@ func actionNewest(event *linebot.Event, values url.Values) {
 			return
 		}
 
-		// append next page column
-		previousPage := currentPage - 1
-		if previousPage < 0 {
-			previousPage = 0
-		}
-		nextPage := currentPage + 1
-		previousData := fmt.Sprintf("action=%s&page=%d", ActionNewest, previousPage)
-		nextData := fmt.Sprintf("action=%s&page=%d", ActionNewest, nextPage)
-		previousText := fmt.Sprintf("上一頁 %d", previousPage)
-		nextText := fmt.Sprintf("下一頁 %d", nextPage)
-		tmpColumn := linebot.NewCarouselColumn(
-			defaultThumbnail,
-			DefaultTitle,
-			"繼續看？",
-			linebot.NewMessageAction(ActionHelp, ActionHelp),
-			linebot.NewPostbackAction(previousText, previousData, "", "", "", ""),
-			linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
-		)
+		tmpColumn := createCarouselColumn(currentPage, ActionNewest)
 		template.Columns = append(template.Columns, tmpColumn)
 
 		sendCarouselMessage(event, template, "熱騰騰的最新照片送到了!")
 	}
 }
 
+// getCarouseTemplate: get carousel template from input records.
 func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (template *linebot.CarouselTemplate) {
 	if len(records) == 0 {
 		log.Println("err1")
@@ -382,6 +351,7 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 			linebot.NewPostbackAction(lable, postBackData, "", "", "", ""),
 			linebot.NewPostbackAction(favLabel, dataAddFavorite, "", "", "", ""),
 		)
+		log.Println("tmpColumn=", tmpColumn, thumnailUrl, title, text, lable, postBackData, dataAddFavorite)
 		columnList = append(columnList, tmpColumn)
 	}
 	template = linebot.NewCarouselTemplate(columnList...)
@@ -521,4 +491,29 @@ func sendImgCarouseMessage(event *linebot.Event, template *linebot.ImageCarousel
 	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("預覽圖片已送達", template)).Do(); err != nil {
 		meta.Log.Println(err)
 	}
+}
+
+// createCarouselColumn: create carousel column
+func createCarouselColumn(currentPage int, action string) *linebot.CarouselColumn {
+	// append next page column
+	previousPage := currentPage - 1
+	if previousPage < 0 {
+		previousPage = 0
+	}
+	nextPage := currentPage + 1
+	previousData := fmt.Sprintf("action=%s&page=%d", action, previousPage)
+	nextData := fmt.Sprintf("action=%s&page=%d", action, nextPage)
+	previousText := fmt.Sprintf("上一頁 %d", previousPage)
+	nextText := fmt.Sprintf("下一頁 %d", nextPage)
+
+	tmpColumn := linebot.NewCarouselColumn(
+		defaultThumbnail,
+		DefaultTitle,
+		"繼續看？",
+		linebot.NewMessageAction(ActionHelp, ActionHelp),
+		linebot.NewPostbackAction(previousText, previousData, "", "", "", ""),
+		linebot.NewPostbackAction(nextText, nextData, "", "", "", ""),
+	)
+
+	return tmpColumn
 }
