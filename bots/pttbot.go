@@ -102,12 +102,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				if message.Text == "showall" {
 					log.Println("get show all user OP--->")
-					// userFavorite := &controllers.UserFavorite{
-					// 	UserId:    event.Source.UserID,
-					// 	Favorites: []string{},
-					// }
 					meta.Db.ShowAll()
-					// userFavorite.ShowAll(meta)
 					sendTextMessage(event, "Already show all user DB OP.")
 					return
 				}
@@ -214,7 +209,6 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 
 		startIdx := currentPage * columnCount
 		endIdx := startIdx + columnCount
-		// lastPage := false
 
 		// reverse slice
 		for i := len(userData.Favorites)/2 - 1; i >= 0; i-- {
@@ -233,6 +227,14 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		for i := startIdx; i < endIdx; i++ {
 			url := userData.Favorites[i]
 			tmpRecord, _ := controllers.GetOne(url)
+			//if no image remove it and skip, and update DB.
+			if len(tmpRecord.ImageLinks) == 0 {
+				favs = utils.RemoveStringItem(favs, i)
+				log.Printf("Favorites[%d] url=%s is missing, ---REMOVE IT--- \n", i, url)
+				userData.Favorites = favs
+				meta.Db.Update(userData)
+				continue
+			}
 			log.Printf("Favorites[%d] url=%s title=%s \n", i, url, tmpRecord.ArticleTitle)
 			favDocuments = append(favDocuments, *tmpRecord)
 		}
@@ -306,6 +308,7 @@ func actionNewest(event *linebot.Event, values url.Values) {
 	}
 }
 
+// getCarouseTemplate: get carousel template from input records.
 func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (template *linebot.CarouselTemplate) {
 	if len(records) == 0 {
 		log.Println("err1")
