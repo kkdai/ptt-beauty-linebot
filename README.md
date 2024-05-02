@@ -14,7 +14,7 @@
 - [x] Memory DB
 - [x] PostgresSQL  
 - [x] Github issue.
-- [ ] Firestore.  [#1](https://github.com/kkdai/ptt-beauty-linebot/issues/1)
+- [ ] Firebase.  [#1](https://github.com/kkdai/ptt-beauty-linebot/issues/1)
 
 # Working in Progress Features
 
