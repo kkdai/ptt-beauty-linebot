@@ -294,6 +294,7 @@ func actionNewest(event *linebot.Event, values url.Values) {
 			records, _ = controllers.Get(currentPage, columnCount)
 		}
 
+		meta.Log.Println("currentPage=", currentPage, "records=", len(records))	
 		template := getCarouseTemplate(event.Source.UserID, records)
 
 		if template == nil {
