@@ -46,7 +46,7 @@ func GetOne(url string) (result *favdb.ArticleDocument, err error) {
 	if !utils.CheckPttURL(url) {
 		return nil, errors.New("Invalid URL")
 	}
-	
+
 	ptt := NewPTT()
 	post := favdb.ArticleDocument{}
 	post.URL = url
@@ -65,7 +65,7 @@ func Get(page int, perPage int) (results []favdb.ArticleDocument, err error) {
 	var ret []favdb.ArticleDocument
 	ptt := NewPTT()
 	count := ptt.ParsePttPageByIndex(page, true)
-	fmt.Println("Total count:", count)
+	fmt.Println("Total count:", count, " perPage:", perPage, " page:", page)
 	for i := 0; i < count && i < perPage; i++ {
 		title := ptt.GetPostTitleByIndex(i)
 		if utils.CheckTitleWithBeauty(title) {
@@ -84,7 +84,7 @@ func GetRandom(count int) (results []favdb.ArticleDocument, err error) {
 	}
 	var ret []favdb.ArticleDocument
 	for i := 0; i < count; i++ {
-		index := rands[i]  // use the random index
+		index := rands[i] // use the random index
 		post := createArticle(ptt, index)
 		post.MessageCount.Count = ptt.GetPostStarByIndex(index)
 		ret = append(ret, post)

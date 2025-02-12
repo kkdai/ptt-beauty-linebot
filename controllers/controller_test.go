@@ -5,7 +5,7 @@ import (
 )
 
 func TestGet(t *testing.T) {
-	if ret, err := Get(3, 5); err != nil {
+	if ret, err := Get(0, 9); err != nil {
 		t.Error(err)
 	} else {
 		if len(ret) < 5 {
@@ -38,7 +38,7 @@ func TestGetOne(t *testing.T) {
 	// Not a valid URL. it must fail.
 	if _, err := GetOne(url); err == nil {
 		t.Error(err)
-	} 
+	}
 }
 
 func TestGetRandom(t *testing.T) {
