@@ -43,6 +43,10 @@ func createArticle(ptt *PTT, index int) favdb.ArticleDocument {
 }
 
 func GetOne(url string) (result *favdb.ArticleDocument, err error) {
+	if !utils.CheckPttURL(url) {
+		return nil, errors.New("Invalid URL")
+	}
+	
 	ptt := NewPTT()
 	post := favdb.ArticleDocument{}
 	post.URL = url

@@ -31,3 +31,36 @@ func TestGetMostLike(t *testing.T) {
 		}
 	}
 }
+
+func TestGetOne(t *testing.T) {
+	// Use a sample URL; actual network calls may be involved.
+	url := "http://example.com"
+	// Not a valid URL. it must fail.
+	if _, err := GetOne(url); err == nil {
+		t.Error(err)
+	} 
+}
+
+func TestGetRandom(t *testing.T) {
+	count := 3
+	if ret, err := GetRandom(count); err != nil {
+		t.Error(err)
+	} else {
+		if len(ret) != count {
+			t.Errorf("GetRandom expected %d articles, got %d", count, len(ret))
+		}
+	}
+}
+
+func TestGetKeyword(t *testing.T) {
+	// Use a sample keyword; actual search results may vary.
+	keyword := "正妹"
+	count := 2
+	if ret, err := GetKeyword(count, keyword); err != nil {
+		t.Error(err)
+	} else {
+		if len(ret) != count {
+			t.Errorf("GetKeyword expected %d articles, got %d", count, len(ret))
+		}
+	}
+}

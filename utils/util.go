@@ -66,3 +66,9 @@ func InArray(val interface{}, array interface{}) (exists bool, index int) {
 func RemoveStringItem(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
+
+// CheckPttURL: Check ptt url
+func CheckPttURL(url string) bool {
+	d, _ := regexp.MatchString("^https://www.ptt.cc/bbs/Beauty/.*.html", url)
+	return d
+}
