@@ -80,28 +80,24 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	meta.Log.Println("enter callback hander")
+	meta.Log.Println("enter callback handler")
 	events, err := bot.ParseRequest(r)
-
 	if err != nil {
+		status := http.StatusInternalServerError
 		if err == linebot.ErrInvalidSignature {
-			w.WriteHeader(400)
-		} else {
-			w.WriteHeader(500)
+			status = http.StatusBadRequest
 		}
+		http.Error(w, http.StatusText(status), status)
 		return
 	}
-
 	for _, event := range events {
-		if event.Type == linebot.EventTypeMessage {
+		switch event.Type {
+		case linebot.EventTypeMessage:
 			userDisplayName := getUserNameById(event.Source.UserID)
-			meta.Log.Printf("Receieve Event Type = %s from User [%s](%s), or Room [%s] or Group [%s]\n",
-				event.Type, userDisplayName, event.Source.UserID, event.Source.RoomID, event.Source.GroupID)
-
+			meta.Log.Printf("Receive Event [%s] from User [%s](%s)", event.Type, userDisplayName, event.Source.UserID)
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				if message.Text == "showall" {
-					log.Println("get show all user OP--->")
 					meta.Db.ShowAll()
 					sendTextMessage(event, "Already show all user DB OP.")
 					return
@@ -114,19 +110,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					actinoAddFavorite(event, "", values)
 					return
 				}
-
-				meta.Log.Println("Text = ", message.Text)
+				meta.Log.Println("Text =", message.Text)
 				textHander(event, message.Text)
 			default:
-				meta.Log.Println("Unimplemented handler for event type ", event.Type)
+				meta.Log.Println("Unimplemented handler for message type", event.Message)
 			}
-		} else if event.Type == linebot.EventTypePostback {
+		case linebot.EventTypePostback:
 			meta.Log.Println("got a postback event")
 			meta.Log.Println(event.Postback.Data)
 			postbackHandler(event)
-
-		} else {
-			meta.Log.Printf("got a %s event\n", event.Type)
+		default:
+			meta.Log.Printf("got a %s event", event.Type)
 		}
 	}
 }
@@ -294,7 +288,7 @@ func actionNewest(event *linebot.Event, values url.Values) {
 			records, _ = controllers.Get(currentPage, columnCount)
 		}
 
-		meta.Log.Println("currentPage=", currentPage, "records=", len(records))	
+		meta.Log.Println("currentPage=", currentPage, "records=", len(records))
 		template := getCarouseTemplate(event.Source.UserID, records)
 
 		if template == nil {
@@ -366,14 +360,12 @@ func postbackHandler(event *linebot.Event) {
 	actionHandler(event, action, m)
 }
 
-func getUserNameById(userId string) (userDisplayName string) {
-	res, err := bot.GetProfile(userId).Do()
+func getUserNameById(userId string) string {
+	profile, err := bot.GetProfile(userId).Do()
 	if err != nil {
-		userDisplayName = "Unknown"
-	} else {
-		userDisplayName = res.DisplayName
+		return "Unknown"
 	}
-	return userDisplayName
+	return profile.DisplayName
 }
 
 func textHander(event *linebot.Event, message string) {
@@ -386,22 +378,10 @@ func textHander(event *linebot.Event, message string) {
 	case "Menu", "menu", "Help", "help", ActionHelp:
 		template := getMenuButtonTemplateV2(event, DefaultTitle)
 		sendCarouselMessage(event, template, "我能為您做什麼？")
-	case ActionRandom:
-		records, _ := controllers.GetRandom(maxCountOfCarousel)
-		template := getCarouseTemplate(event.Source.UserID, records)
-		sendCarouselMessage(event, template, "隨機表特已送到囉")
-	case ActionNewest:
-		values := url.Values{}
-		values.Set("page", "0")
-		actionNewest(event, values)
-	case ActonShowFav:
-		values := url.Values{}
-		values.Set("user_id", event.Source.UserID)
-		values.Set("page", "0")
-		actionShowFavorite(event, "", values)
 	}
 
 	if event.Source.UserID != "" && event.Source.GroupID == "" && event.Source.RoomID == "" {
+		meta.Log.Println("Search for keyword:", message)
 		records, _ := controllers.GetKeyword(10, message)
 		if len(records) > 0 {
 			template := getCarouseTemplate(event.Source.UserID, records)
