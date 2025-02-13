@@ -339,7 +339,7 @@ func actionNewest(event *linebot.Event, values url.Values) {
 // getCarouseTemplate: get carousel template from input records.
 func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (template *linebot.CarouselTemplate) {
 	if len(records) == 0 {
-		log.Println("err1")
+		log.Printf("err1: No articles found for user '%s'. Record count: %d", userId, len(records))
 		return nil
 	}
 
@@ -348,7 +348,7 @@ func getCarouseTemplate(userId string, records []favdb.ArticleDocument) (templat
 	favLabel := ""
 
 	for _, result := range records {
-		if exist, _ := utils.InArray(result.URL, userData.Favorites); exist == true {
+		if exist, _ := utils.InArray(result.URL, userData.Favorites); exist {
 			favLabel = "❤️ 移除最愛"
 		} else {
 			favLabel = "💛 加入最愛"
