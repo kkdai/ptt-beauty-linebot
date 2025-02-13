@@ -79,6 +79,10 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
+func replyError(w http.ResponseWriter, status int) {
+	http.Error(w, http.StatusText(status), status)
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	meta.Log.Println("enter callback handler")
 	events, err := bot.ParseRequest(r)
@@ -87,40 +91,69 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if err == linebot.ErrInvalidSignature {
 			status = http.StatusBadRequest
 		}
-		http.Error(w, http.StatusText(status), status)
+		replyError(w, status)
 		return
 	}
 	for _, event := range events {
 		switch event.Type {
 		case linebot.EventTypeMessage:
-			userDisplayName := getUserNameById(event.Source.UserID)
-			meta.Log.Printf("Receive Event [%s] from User [%s](%s)", event.Type, userDisplayName, event.Source.UserID)
-			switch message := event.Message.(type) {
-			case *linebot.TextMessage:
-				if message.Text == "showall" {
-					meta.Db.ShowAll()
-					sendTextMessage(event, "Already show all user DB OP.")
-					return
-				}
-				if strings.Contains(message.Text, "www.ptt.cc/bbs/Beauty") {
-					values := url.Values{}
-					values.Set("user_id", event.Source.UserID)
-					rxRelaxed := xurls.Relaxed()
-					values.Set("url", rxRelaxed.FindString(message.Text))
-					actinoAddFavorite(event, "", values)
-					return
-				}
-				meta.Log.Println("Text =", message.Text)
-				textHander(event, message.Text)
-			default:
-				meta.Log.Println("Unimplemented handler for message type", event.Message)
-			}
+			handleMessageEvent(event)
 		case linebot.EventTypePostback:
 			meta.Log.Println("got a postback event")
 			meta.Log.Println(event.Postback.Data)
 			postbackHandler(event)
 		default:
 			meta.Log.Printf("got a %s event", event.Type)
+		}
+	}
+}
+
+func handleMessageEvent(event *linebot.Event) {
+	userDisplayName := getUserNameById(event.Source.UserID)
+	meta.Log.Printf("Receive Event [%s] from User [%s](%s)", event.Type, userDisplayName, event.Source.UserID)
+	switch message := event.Message.(type) {
+	case *linebot.TextMessage:
+		if message.Text == "showall" {
+			meta.Db.ShowAll()
+			sendTextMessage(event, "Already show all user DB OP.")
+			return
+		}
+		if strings.Contains(message.Text, "www.ptt.cc/bbs/Beauty") {
+			values := url.Values{}
+			values.Set("user_id", event.Source.UserID)
+			rxRelaxed := xurls.Relaxed()
+			values.Set("url", rxRelaxed.FindString(message.Text))
+			actinoAddFavorite(event, "", values)
+			return
+		}
+		handleTextMessage(event, message.Text)
+	default:
+		meta.Log.Println("Unimplemented handler for message type", event.Message)
+	}
+}
+
+func handleTextMessage(event *linebot.Event, message string) {
+	meta.Log.Println("Text =", message)
+	if _, err := meta.Db.Get(event.Source.UserID); err != nil {
+		meta.Log.Println("User data is not created, create a new one")
+		meta.Db.Add(favdb.UserFavorite{UserId: event.Source.UserID})
+	}
+	log.Println("txMSG=", message)
+	switch message {
+	case "Menu", "menu", "Help", "help", ActionHelp:
+		template := getMenuButtonTemplateV2(event, DefaultTitle)
+		sendCarouselMessage(event, template, "我能為您做什麼？")
+	}
+
+	if event.Source.UserID != "" && event.Source.GroupID == "" && event.Source.RoomID == "" {
+		meta.Log.Println("Search for keyword:", message)
+		records, _ := controllers.GetKeyword(10, message)
+		if len(records) > 0 {
+			template := getCarouseTemplate(event.Source.UserID, records)
+			sendCarouselMessage(event, template, "搜尋表特已送到囉")
+		} else {
+			template := getMenuButtonTemplateV2(event, DefaultTitle)
+			sendCarouselMessage(event, template, "我能為您做什麼？")
 		}
 	}
 }
@@ -366,31 +399,6 @@ func getUserNameById(userId string) string {
 		return "Unknown"
 	}
 	return profile.DisplayName
-}
-
-func textHander(event *linebot.Event, message string) {
-	if _, err := meta.Db.Get(event.Source.UserID); err != nil {
-		meta.Log.Println("User data is not created, create a new one")
-		meta.Db.Add(favdb.UserFavorite{UserId: event.Source.UserID})
-	}
-	log.Println("txMSG=", message)
-	switch message {
-	case "Menu", "menu", "Help", "help", ActionHelp:
-		template := getMenuButtonTemplateV2(event, DefaultTitle)
-		sendCarouselMessage(event, template, "我能為您做什麼？")
-	}
-
-	if event.Source.UserID != "" && event.Source.GroupID == "" && event.Source.RoomID == "" {
-		meta.Log.Println("Search for keyword:", message)
-		records, _ := controllers.GetKeyword(10, message)
-		if len(records) > 0 {
-			template := getCarouseTemplate(event.Source.UserID, records)
-			sendCarouselMessage(event, template, "搜尋表特已送到囉")
-		} else {
-			template := getMenuButtonTemplateV2(event, DefaultTitle)
-			sendCarouselMessage(event, template, "我能為您做什麼？")
-		}
-	}
 }
 
 func getMenuButtonTemplateV2(event *linebot.Event, title string) (template *linebot.CarouselTemplate) {
