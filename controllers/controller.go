@@ -68,9 +68,10 @@ func Get(page int, perPage int) (results []favdb.ArticleDocument, err error) {
 	fmt.Println("Total count:", count, " perPage:", perPage, " page:", page)
 	for i := 0; i < count && i < perPage; i++ {
 		title := ptt.GetPostTitleByIndex(i)
-		if utils.CheckTitleWithBeauty(title) {
-			ret = append(ret, createArticle(ptt, i))
-		}
+		fmt.Println("Title:", title)
+		// if utils.CheckTitleWithBeauty(title) {
+		ret = append(ret, createArticle(ptt, i))
+		// }
 	}
 	return ret, nil
 }
