@@ -138,11 +138,12 @@ func handleTextMessage(event *linebot.Event, message string) {
 		meta.Log.Println("User data is not created, create a new one")
 		meta.Db.Add(favdb.UserFavorite{UserId: event.Source.UserID})
 	}
-	log.Println("txMSG=", message)
+
 	switch message {
 	case "Menu", "menu", "Help", "help", ActionHelp:
 		template := getMenuButtonTemplateV2(event, DefaultTitle)
 		sendCarouselMessage(event, template, "我能為您做什麼？")
+		return
 	}
 
 	if event.Source.UserID != "" && event.Source.GroupID == "" && event.Source.RoomID == "" {
@@ -151,9 +152,6 @@ func handleTextMessage(event *linebot.Event, message string) {
 		if len(records) > 0 {
 			template := getCarouseTemplate(event.Source.UserID, records)
 			sendCarouselMessage(event, template, "搜尋表特已送到囉")
-		} else {
-			template := getMenuButtonTemplateV2(event, DefaultTitle)
-			sendCarouselMessage(event, template, "我能為您做什麼？")
 		}
 	}
 }
@@ -289,6 +287,7 @@ func actionRandom(event *linebot.Event, values url.Values) {
 }
 
 func actionMostLike(event *linebot.Event, action string, values url.Values) {
+	meta.Log.Println("actionMostLike")
 	period, _ := strconv.Atoi(values.Get("period"))
 	records, _ := controllers.GetMostLike(period, maxCountOfCarousel)
 	label := "已幫您查詢到一些照片~"
@@ -300,6 +299,7 @@ func actionMostLike(event *linebot.Event, action string, values url.Values) {
 }
 
 func actionAllImage(event *linebot.Event, values url.Values) {
+	meta.Log.Println("actionAllImage")
 	if url := values.Get("url"); url != "" {
 		result, _ := controllers.GetOne(url)
 		template := getImgCarousTemplate(result, values)
@@ -310,6 +310,7 @@ func actionAllImage(event *linebot.Event, values url.Values) {
 }
 
 func actionNewest(event *linebot.Event, values url.Values) {
+	meta.Log.Println("actionNewest")
 	columnCount := 9
 	if currentPage, err := strconv.Atoi(values.Get("page")); err != nil {
 		meta.Log.Println("Unable to parse parameters", values)
