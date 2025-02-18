@@ -327,6 +327,7 @@ func actionNewest(event *linebot.Event, values url.Values) {
 
 		if template == nil {
 			meta.Log.Println("Unable to get template", values)
+			sendTextMessage(event, "沒有最新照片了")
 			return
 		}
 
