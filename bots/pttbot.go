@@ -268,6 +268,7 @@ func actionShowFavorite(event *linebot.Event, action string, values url.Values) 
 		template := getCarouseTemplate(event.Source.UserID, favDocuments)
 		if template == nil {
 			meta.Log.Println("Unable to get template", values)
+			sendTextMessage(event, "沒有最新照片了")
 			return
 		}
 		tmpColumn := createCarouselColumn(currentPage, ActonShowFav)
